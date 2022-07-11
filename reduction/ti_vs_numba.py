@@ -17,13 +17,13 @@ def init():
         v2[i] = 2.0
 
 @ti.kernel
-def reduce_ti():
+def reduce_ti()->ti.f64:
     n = v1.shape[0]
     sum = 0.0
     ti.loop_config(block_dim=1024)
     for i in range(n):
         sum += v1[i]*v2[i]
-    # return sum
+    return sum
     # Returning the sum in CUDA will slower the code. Why?
 
 
@@ -33,7 +33,7 @@ def reduce_nb():
     n = v1np.shape[0]
     for i in prange(n):
         sum += v1np[i] * v2np[i]
-
+    return sum
 
 def reduce_np():
     return np.dot(v1np, v2np)
