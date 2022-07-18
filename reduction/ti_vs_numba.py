@@ -3,7 +3,7 @@ import time
 import numpy as np
 from numba import njit, prange
 
-ti.init(arch=ti.cpu, default_fp=ti.f64)
+ti.init(arch=ti.gpu, default_fp=ti.f64)
 
 n = 1 << 23
 print('Problem size:', n)
@@ -16,11 +16,12 @@ def init():
         v1[i] = 1.0
         v2[i] = 2.0
 
+        
 @ti.kernel
 def reduce_ti()->ti.f64:
     n = v1.shape[0]
     sum = 0.0
-    ti.loop_config(block_dim=1024)
+    ti.loop_config(block_dim_adaptive=True)
     for i in range(n):
         sum += v1[i]*v2[i]
     return sum
